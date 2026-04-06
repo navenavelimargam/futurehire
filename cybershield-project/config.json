@@ -1,0 +1,24 @@
+{
+  "server": {
+    "port": 9090,
+    "backend_url": "https://www.google.com"
+  },
+  "rate_limits": [
+    {
+      "path": "/",
+      "method": "GET",
+      "limit": 5,
+      "window_seconds": 60
+    },
+    {
+      "path": "/login",
+      "method": "POST",
+      "limit": 2,
+      "window_seconds": 60
+    }
+  ],
+  "security": {
+    "block_sql_injection": true,
+    "blacklisted_ips": []
+  }
+}

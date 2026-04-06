@@ -1,0 +1,10 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run CyberShield Server",
+			"type": "shell",
+			"command": "go run main.go"
+		}
+	]
+}

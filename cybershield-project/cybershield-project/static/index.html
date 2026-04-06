@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberShield — Security Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="body-root">
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="logo-text">🛡️ <strong>Cyber</strong>Shield <span style="color:#94a3b8;font-size:12px;margin-left:8px;">CyberShield v2.0</span></div>
+    <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:12px;color:#94a3b8;">Security Level:</span>
+        <!-- Feature 2: Security Level Dial -->
+        <div class="level-dial" id="level-dial">
+            <button class="lvl-btn active" id="lvl-0" onclick="setLevel(0)">👁️ Monitor</button>
+            <button class="lvl-btn" id="lvl-1" onclick="setLevel(1)">⚔️ Active</button>
+            <button class="lvl-btn" id="lvl-2" onclick="setLevel(2)">🔒 Lockdown</button>
+        </div>
+    </div>
+</div>
+
+<div class="shell" id="main-shell">
+
+    <!-- STAT CARDS ROW -->
+    <div class="stats-row">
+        <div class="stat-card blue">
+            <div class="sc-label">Total Requests</div>
+            <div class="sc-value" id="total-req">0</div>
+        </div>
+        <div class="stat-card green">
+            <div class="sc-label">Requests / sec</div>
+            <div class="sc-value" id="rps-val">0.0</div>
+        </div>
+        <div class="stat-card rose">
+            <div class="sc-label">Blocked</div>
+            <div class="sc-value" id="blocked-val">0</div>
+        </div>
+        <!-- Feature 1: Honey-token hits counter -->
+        <div class="stat-card gold">
+            <div class="sc-label">🪤 Honey-Token Hits</div>
+            <div class="sc-value" id="honey-val">0</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="sc-label">🔥 Top Threat Score</div>
+            <div class="sc-value" id="top-threat-val">0</div>
+        </div>
+    </div>
+
+    <!-- MID ROW: Traffic Chart + Threat Scores -->
+    <div class="mid-row">
+
+        <!-- Traffic Chart -->
+        <div class="panel">
+            <div class="panel-head">
+                <h2>📡 Live Traffic</h2>
+            </div>
+            <div class="chart-body">
+                <canvas id="trafficChart" height="140"></canvas>
+            </div>
+        </div>
+
+        <!-- Feature 3: Top Threat Scores -->
+        <div class="panel">
+            <div class="panel-head">
+                <h2>🔥 Threat Heatmap</h2>
+                <span class="badge-live">LIVE</span>
+            </div>
+            <div id="threat-list" style="padding:12px 16px;"></div>
+        </div>
+
+    </div>
+
+    <!-- LOWER ROW: Feature 4 Bench Duel + IP Management -->
+    <div class="lower-row">
+
+        <!-- Feature 4: Performance Duel -->
+        <div class="panel">
+            <div class="panel-head">
+                <h2>⚡ Performance Duel</h2>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <button class="bench-btn" id="bench-legacy" onclick="setBench('Legacy')">😟 Legacy</button>
+                    <button class="bench-btn active-bench" id="bench-cybershield" onclick="setBench('CyberShield')">🚀 CyberShield</button>
+                </div>
+            </div>
+            <div class="duel-grid">
+                <div class="duel-side legacy-side" id="duel-legacy">
+                    <div class="duel-label">😟 LEGACY</div>
+                    <div class="duel-metric"><span class="duel-num" id="legacy-latency">—</span><span class="duel-unit">ms</span></div>
+                    <div class="duel-sublabel">Avg Latency</div>
+                    <div class="duel-detail">🚫 Honey-Tokens: <b id="legacy-honey">Not checked</b></div>
+                    <div class="duel-detail">CPU simulated: <b style="color:#e84060">~75%</b></div>
+                </div>
+                <div class="duel-vs">VS</div>
+                <div class="duel-side cybershield-side" id="duel-cybershield">
+                    <div class="duel-label">🚀 CYBERSHIELD</div>
+                    <div class="duel-metric"><span class="duel-num" id="cybershield-latency">—</span><span class="duel-unit">ms</span></div>
+                    <div class="duel-sublabel">Avg Latency</div>
+                    <div class="duel-detail">✅ Honey-Tokens: <b id="cybershield-honey">Active</b></div>
+                    <div class="duel-detail">CPU simulated: <b style="color:#22c97a">~12%</b></div>
+                </div>
+            </div>
+            <div style="padding:12px 16px;text-align:center;">
+                <button class="btn-launch" onclick="launchAttack()">🔴 LAUNCH ATTACK — 50 REQ</button>
+                <div id="attack-status" style="font-size:11px;color:#94a3b8;margin-top:6px;"></div>
+                <div class="attack-console" id="attack-console" style="display:none;">
+                    <div class="attack-console-title">Backend worker</div>
+                    <div class="attack-console-lines" id="attack-console-lines"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IP Management + Honey Traps -->
+        <div class="panel">
+            <div class="panel-head">
+                <h2>🛠️ IP Control</h2>
+            </div>
+            <div class="ip-body">
+                <!-- Feature 1: Honey-token trap indicator -->
+                <div class="honey-traps-box">
+                    <div style="font-size:11px;font-weight:700;color:#f0a025;text-transform:uppercase;margin-bottom:8px;">🪤 Active Honey Traps</div>
+                    <div class="honey-trap-list">
+                        <span class="trap-tag">/v1/admin/config-backup</span>
+                        <span class="trap-tag">/api/internal/user-dump</span>
+                        <span class="trap-tag">/.env</span>
+                        <span class="trap-tag">/admin/passwd</span>
+                        <span class="trap-tag">/wp-admin/setup-config</span>
+                    </div>
+                </div>
+                <div class="ip-form mt-2">
+                    <input type="text" id="ip-input" placeholder="Enter IP to block..." />
+                    <button class="btn-add" onclick="addBlock()">Block</button>
+                </div>
+                <div id="blacklist-ips"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ATTACK DETECTIONS -->
+    <div class="panel">
+        <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div>
+                <h2>⚠️ Threat Breakdown</h2>
+                <div class="panel-subtitle">Live attack classification and block categories</div>
+            </div>
+            <div class="attack-total" id="attack-total">0 DETECTED</div>
+        </div>
+        <div style="padding:16px;">
+            <div class="attack-bar">
+                <div class="attack-label">SQL Injection</div>
+                <div class="attack-bar-container">
+                    <div class="attack-bar-fill" id="sql-bar" style="width:0%;background:#e84060;"></div>
+                </div>
+                <div class="attack-count" id="sql-count">0</div>
+            </div>
+            <div class="attack-bar">
+                <div class="attack-label">XSS Attack</div>
+                <div class="attack-bar-container">
+                    <div class="attack-bar-fill" id="xss-bar" style="width:0%;background:#f0a025;"></div>
+                </div>
+                <div class="attack-count" id="xss-count">0</div>
+            </div>
+            <div class="attack-bar">
+                <div class="attack-label">Rate Limited</div>
+                <div class="attack-bar-container">
+                    <div class="attack-bar-fill" id="rate-bar" style="width:0%;background:#8b5cf6;"></div>
+                </div>
+                <div class="attack-count" id="rate-count">0</div>
+            </div>
+            <div class="attack-bar">
+                <div class="attack-label">Banned IP</div>
+                <div class="attack-bar-container">
+                    <div class="attack-bar-fill" id="ban-bar" style="width:0%;background:#ef4444;"></div>
+                </div>
+                <div class="attack-count" id="ban-count">0</div>
+            </div>
+            <div class="attack-bar">
+                <div class="attack-label">WAF Detection</div>
+                <div class="attack-bar-container">
+                    <div class="attack-bar-fill" id="waf-bar" style="width:0%;background:#f97316;"></div>
+                </div>
+                <div class="attack-count" id="waf-count">0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOG TABLE -->
+    <div class="panel">
+        <div class="panel-head">
+            <h2>📋 Request Log</h2>
+            <span class="badge-live">LIVE</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>Endpoint</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Reason</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="log-body"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Feature 1: Honey-token alert popup -->
+<div id="honey-alert" class="honey-alert" style="display:none;">
+    <div>🪤 <strong>TRAP TRIGGERED!</strong></div>
+    <div id="honey-alert-msg" style="font-size:12px;margin-top:4px;"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

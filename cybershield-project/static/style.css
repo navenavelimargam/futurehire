@@ -1,0 +1,95 @@
+/* ════════════════════════════════════════
+   DeProxy — SecureShield Professional CSS
+   ════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-grad: 145deg, #f5f8fc 0%, #f0f3f9 40%, #f7fafc 100%;
+  --card: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --tx: #1e293b;
+  --tx2: #64748b;
+  --blue: #2ea8d5;
+  --green: #22c97a;
+  --rose: #e84060;
+  --gold: #f0a025;
+}
+
+body { 
+  font-family: 'DM Sans', sans-serif; 
+  background: linear-gradient(var(--bg-grad)); 
+  color: var(--tx); 
+  font-size: 13px; 
+}
+
+/* TOPBAR */
+.topbar { 
+  display: flex; align-items: center; justify-content: space-between; 
+  padding: 0 28px; height: 56px; background: #fff; 
+  border-bottom: 1px solid var(--border); 
+}
+
+.logo-text strong { color: var(--blue); }
+
+/* SHELL & STAT CARDS */
+.shell { padding: 22px 28px; display: flex; flex-direction: column; gap: 18px; }
+.stats-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
+.stat-card { 
+  background: var(--card); border-radius: 12px; padding: 18px; 
+  border: 1px solid var(--border); border-top: 3px solid #eee; 
+}
+.stat-card.blue { border-top-color: var(--blue); }
+.stat-card.green { border-top-color: var(--green); }
+.stat-card.rose { border-top-color: var(--rose); }
+
+.sc-value { font-size: 2rem; font-weight: 800; font-family: 'DM Mono', monospace; }
+
+/* PANEL DESIGN */
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.panel-head { 
+  display: flex; align-items: center; justify-content: space-between; 
+  padding: 12px 18px; background: #fafbfc; border-bottom: 1px solid var(--border); 
+}
+.panel-head h2 { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+
+.mid-row, .lower-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
+
+/* LIVE TRAFFIC TABLE */
+table { width: 100%; border-collapse: collapse; }
+th { padding: 10px 15px; text-align: left; font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; }
+td { padding: 12px 15px; border-bottom: 1px solid #f8fafc; font-size: 0.8rem; }
+.st-pill { font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; }
+.st-ok { background: #e3faf0; color: var(--green); }
+.st-err { background: #fde8ec; color: var(--rose); }
+
+/* --- NEW IP MANAGEMENT STYLES --- */
+.ip-body { padding: 15px; }
+.ip-item { 
+  display: flex; align-items: center; justify-content: space-between; 
+  padding: 10px 15px; background: #fff; margin-bottom: 8px; 
+  border-radius: 8px; border: 1px solid #f1f5f9; 
+  transition: transform 0.2s;
+}
+.ip-item:hover { transform: translateX(5px); border-color: #e2e8f0; }
+
+.dot-red { 
+  width: 8px; height: 8px; background: var(--rose); 
+  border-radius: 50%; display: inline-block; margin-right: 10px; 
+  box-shadow: 0 0 8px rgba(232, 64, 96, 0.4); 
+}
+
+.reason-tag { 
+  font-size: 11px; font-weight: 700; color: #94a3b8; 
+  font-family: 'DM Mono', monospace; text-transform: uppercase; 
+}
+
+/* CHART RADAR EFFECT */
+.chart-body { background: #0f172a; padding: 10px; border-radius: 0 0 12px 12px; }
+
+/* INPUT STYLES */
+.ip-form { display: flex; gap: 10px; margin-bottom: 15px; }
+.ip-form input { 
+  flex: 1; padding: 8px 12px; border-radius: 8px; 
+  border: 1px solid #e2e8f0; outline: none; 
+}
+.btn-add { background: var(--tx); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
